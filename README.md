@@ -1,7 +1,5 @@
 # perplexity-server MCP Server
 
-alls upon perplexity api while i code to get docs, find apis to integrate, and to check deprecated code to make sure everything works properl
-
 This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
 
 - Resources representing text notes with URIs and metadata
