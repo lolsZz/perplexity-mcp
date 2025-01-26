@@ -1,6 +1,6 @@
 # MCP-researcher Server
 
-Your own research assistant inside of cline! Utilizes Perplexity's new Sonar API to get docs, create up to date api routes, and check deprecated code while you create features with other LLMS (say through openrouter). 
+Your own research assistant inside of Cline! Utilizes Perplexity's new Sonar Pro API to get docs, create up-to-date api routes, and check deprecated code while you create features with Cline. 
 
 
 ## Tools
@@ -24,13 +24,13 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
 
 2. Clone the repo
 
-git clone https://github.com/DaInfernalCoder/researcher-mcp
+git clone https://github.com/DaInfernalCoder/researcher-mcp perplexity-server 
 cd perplexity-server
 
 3. Install dependencies and build:
 npm install
 
-4. Get a Perplexity API key from https://www.perplexity.ai/settings
+4. Get a Perplexity API key from [https://www.perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
 
 5. Create the MCP settings file in the appropriate location for your OS:
 macOS: ~/Library/Application Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
@@ -70,7 +70,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 7. Build the server: 
 npm run build
 
-8. 
+9. 
 Make sure to:
 - Replace /absolute/path/to with the actual path where you cloned the repository
 - Replace your-api-key-here with your Perplexity API key
