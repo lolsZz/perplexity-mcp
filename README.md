@@ -18,27 +18,32 @@ Discovers and evaluates APIs that could be integrated into a project. The exampl
 Analyzes code for deprecated features or patterns, providing migration guidance. The example demonstrates checking React class components and lifecycle methods for modern alternatives.
 
 
-Install dependencies:
-```bash
-npm install
-```
-
-Build the server:
-```bash
-npm run build
-```
-
-For development with auto-rebuild:
-```bash
-npm run watch
-```
-
 ## Installation
 
-To use with Claude Desktop, add the server config:
+1. First install Node.js if not already installed (from nodejs.org)
+
+2. Create a new directory for the MCP server:
+
+mkdir researcher-mcp
+cd researcher-mcp
+
+3. Initialize a new Node.js project:
+npm init -y
+
+4. Install the required dependencies:
+npm install @modelcontextprotocol/sdk axios cheerio
+
+5. Create the MCP settings file in the appropriate location for your OS:
+macOS: ~/Library/Application Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
+Windows: %APPDATA%\Cursor\User\globalStorage\saoudrizwan.claude-dev\settings\cline_mcp_settings.json
+Linux: ~/.config/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
+
+5. To use with Claude Desktop, add the server config:
 
 On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+6. To use with Cline, add into mcpServers: 
 
 ```json
 {
@@ -46,7 +51,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
     "perplexity-server": {
       "command": "node",
       "args": [
-        ""
+        "[path/to/researcher-mcp/index.js]"
       ],
       "env": {
         "PERPLEXITY_API_KEY": ""
