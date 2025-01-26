@@ -22,16 +22,18 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
 
 1. First install Node.js if not already installed (from nodejs.org)
 
-2. Create a new directory for the MCP server:
+2. Clone or download the perplexity-server code:
 
-mkdir researcher-mcp
-cd researcher-mcp
+mkdir -p ~/Documents/Cline/MCP
+cd ~/Documents/Cline/MCP
+git clone 
+cd perplexity-server
 
-3. Initialize a new Node.js project:
-npm init -y
+3. Install dependencies and build:
+npm install
+npm run build
 
-4. Install the required dependencies:
-npm install @modelcontextprotocol/sdk axios cheerio
+4. Get a Perplexity API key from https://www.perplexity.ai/settings
 
 5. Create the MCP settings file in the appropriate location for your OS:
 macOS: ~/Library/Application Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
@@ -67,3 +69,10 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
   }
 }
 ```
+
+Make sure to:
+
+- Replace /absolute/path/to with the actual path where you cloned the repository
+- Replace your-api-key-here with your Perplexity API key
+- Keep the same autoApprove settings for consistent behavior
+
