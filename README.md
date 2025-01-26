@@ -22,16 +22,13 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
 
 1. First install Node.js if not already installed (from nodejs.org)
 
-2. Clone or download the perplexity-server code:
+2. Clone the repo
 
-mkdir -p ~/Documents/Cline/MCP
-cd ~/Documents/Cline/MCP
-git clone 
+git clone https://github.com/DaInfernalCoder/researcher-mcp
 cd perplexity-server
 
 3. Install dependencies and build:
 npm install
-npm run build
 
 4. Get a Perplexity API key from https://www.perplexity.ai/settings
 
@@ -70,8 +67,11 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 
-Make sure to:
+7. Build the server: 
+npm run build
 
+8. 
+Make sure to:
 - Replace /absolute/path/to with the actual path where you cloned the repository
 - Replace your-api-key-here with your Perplexity API key
 - Keep the same autoApprove settings for consistent behavior
