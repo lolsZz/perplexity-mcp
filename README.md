@@ -71,7 +71,6 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 7. Build the server: 
 npm run build
 
-9. 
 Make sure to:
 - Replace /absolute/path/to with the actual path where you cloned the repository
 - Replace your-api-key-here with your Perplexity API key
