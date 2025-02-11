@@ -3,8 +3,6 @@ https://cline.bot/blog/supercharge-cline-3-ways-to-build-better-with-perplexity-
 
 # MCP-researcher Server
 
-[![smithery badge](https://smithery.ai/badge/@DaInfernalCoder/perplexity-researcher-mcp)](https://smithery.ai/server/@DaInfernalCoder/perplexity-researcher-mcp)
-
 Your own research assistant inside of Cline! Utilizes Perplexity's new Sonar Pro API to get docs, create up-to-date api routes, and check deprecated code while you create features with Cline. 
 
 Includes Chain of Thought Reasoning and local chat history through SQLite thanks to Lix for the idea :)
@@ -28,15 +26,6 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
 
 ## Installation
 
-### Installing via Smithery
-
-To install Research Assistant for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@DaInfernalCoder/perplexity-researcher-mcp):
-
-```bash
-npx -y @smithery/cli install @DaInfernalCoder/perplexity-researcher-mcp --client claude
-```
-
-### Manual Installation
 1. First install Node.js if not already installed (from nodejs.org)
 
 2. Clone the repo
