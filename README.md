@@ -1,3 +1,6 @@
+We got an article about researcher! 
+https://cline.bot/blog/supercharge-cline-3-ways-to-build-better-with-perplexity-mcp
+
 # MCP-researcher Server
 
 Your own research assistant inside of Cline! Utilizes Perplexity's new Sonar Pro API to get docs, create up-to-date api routes, and check deprecated code while you create features with Cline. 
