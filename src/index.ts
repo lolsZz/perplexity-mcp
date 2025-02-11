@@ -9,15 +9,24 @@ import {
   ErrorCode,
 } from "@modelcontextprotocol/sdk/types.js";
 import axios from "axios";
+import Database from "better-sqlite3";
+import { join } from "path";
+import { homedir } from "os";
 
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
 if (!PERPLEXITY_API_KEY) {
   throw new Error("PERPLEXITY_API_KEY environment variable is required");
 }
 
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 class PerplexityServer {
   private server: Server;
   private axiosInstance;
+  private db: Database.Database;
 
   constructor() {
     this.server = new Server(
@@ -40,19 +49,84 @@ class PerplexityServer {
       },
     });
 
+    // Initialize SQLite database
+    const dbPath = join(homedir(), ".perplexity-mcp", "chat_history.db");
+    this.db = new Database(dbPath);
+    this.initializeDatabase();
+
     this.setupToolHandlers();
     
     // Error handling
     this.server.onerror = (error) => console.error("[MCP Error]", error);
     process.on("SIGINT", async () => {
+      this.db.close();
       await this.server.close();
       process.exit(0);
     });
   }
 
+  private initializeDatabase() {
+    // Create chats table
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS chats (
+        id TEXT PRIMARY KEY,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create messages table
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        chat_id TEXT NOT NULL,
+        role TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (chat_id) REFERENCES chats(id)
+      )
+    `);
+  }
+
+  private getChatHistory(chatId: string): ChatMessage[] {
+    const messages = this.db.prepare(
+      "SELECT role, content FROM messages WHERE chat_id = ? ORDER BY created_at ASC"
+    ).all(chatId);
+    return messages as ChatMessage[];
+  }
+
+  private saveChatMessage(chatId: string, message: ChatMessage) {
+    // Ensure chat exists
+    this.db.prepare(
+      "INSERT OR IGNORE INTO chats (id) VALUES (?)"
+    ).run(chatId);
+
+    // Save message
+    this.db.prepare(
+      "INSERT INTO messages (chat_id, role, content) VALUES (?, ?, ?)"
+    ).run(chatId, message.role, message.content);
+  }
+
   private setupToolHandlers() {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
+        {
+          name: "chat_perplexity",
+          description: "Maintains ongoing conversations with Perplexity AI. Creates new chats or continues existing ones with full history context.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                description: "The message to send to Perplexity AI"
+              },
+              chat_id: {
+                type: "string",
+                description: "Optional: ID of an existing chat to continue. If not provided, a new chat will be created."
+              }
+            },
+            required: ["message"]
+          }
+        },
         {
           name: "search",
           description: "Perform a general search query to get comprehensive information on any topic",
@@ -132,6 +206,46 @@ class PerplexityServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
         switch (request.params.name) {
+          case "chat_perplexity": {
+            const { message, chat_id = crypto.randomUUID() } = request.params.arguments as { 
+              message: string; 
+              chat_id?: string;
+            };
+
+            // Get chat history
+            const history = this.getChatHistory(chat_id);
+            
+            // Add new user message
+            const userMessage: ChatMessage = { role: "user", content: message };
+            this.saveChatMessage(chat_id, userMessage);
+
+            // Prepare messages array with history
+            const messages = [...history, userMessage];
+
+            // Call Perplexity API
+            const response = await this.axiosInstance.post("/chat/completions", {
+              model: "sonar-reasoning-pro",
+              messages,
+            });
+
+            // Save assistant's response
+            const assistantMessage: ChatMessage = {
+              role: "assistant",
+              content: response.data.choices[0].message.content,
+            };
+            this.saveChatMessage(chat_id, assistantMessage);
+
+            return {
+              content: [{
+                type: "text",
+                text: JSON.stringify({
+                  chat_id,
+                  response: assistantMessage.content
+                }, null, 2)
+              }]
+            };
+          }
+
           case "get_documentation": {
             const { query, context = "" } = request.params.arguments as { query: string; context?: string };
             const prompt = `Provide comprehensive documentation and usage examples for ${query}. ${context ? `Focus on: ${context}` : ""} Include:
@@ -144,7 +258,7 @@ class PerplexityServer {
             7. Links to official documentation if available`;
 
             const response = await this.axiosInstance.post("/chat/completions", {
-              model: "sonar-pro",
+              model: "sonar-reasoning-pro",
               messages: [{ role: "user", content: prompt }],
             });
 
@@ -169,7 +283,7 @@ class PerplexityServer {
             8. Code example of basic usage`;
 
             const response = await this.axiosInstance.post("/chat/completions", {
-              model: "sonar-pro",
+              model: "sonar-reasoning-pro",
               messages: [{ role: "user", content: prompt }],
             });
 
@@ -196,7 +310,7 @@ class PerplexityServer {
             6. Code examples showing how to update to current best practices`;
 
             const response = await this.axiosInstance.post("/chat/completions", {
-              model: "sonar-pro",
+              model: "sonar-reasoning-pro",
               messages: [{ role: "user", content: prompt }],
             });
 
@@ -224,7 +338,7 @@ class PerplexityServer {
             }
 
             const response = await this.axiosInstance.post("/chat/completions", {
-              model: "sonar-pro",
+              model: "sonar-reasoning-pro",
               messages: [{ role: "user", content: prompt }],
             });
 

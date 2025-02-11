@@ -18,9 +18,11 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0",
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "better-sqlite3": "^11.8.1"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^20.11.24",
     "typescript": "^5.3.3"
   }
