@@ -26,7 +26,7 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
 
 ## Installation
 
-# paste this part into claude directly if you want to, the ai can install it for you
+### paste this part into claude directly if you want to, the ai can install it for you
 
 1. First install Node.js if not already installed (from nodejs.org)
 
