@@ -1,4 +1,4 @@
-We got an article about researcher! 
+We got an article about perpelxity mcp! 
 https://cline.bot/blog/supercharge-cline-3-ways-to-build-better-with-perplexity-mcp
 
 # MCP-researcher Server
