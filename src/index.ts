@@ -10,7 +10,8 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import axios from "axios";
 import Database from "better-sqlite3";
-import { join } from "path";
+import { existsSync, mkdirSync } from "fs";
+import { dirname, join } from "path";
 import { homedir } from "os";
 
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
@@ -51,7 +52,14 @@ class PerplexityServer {
 
     // Initialize SQLite database
     const dbPath = join(homedir(), ".perplexity-mcp", "chat_history.db");
-    this.db = new Database(dbPath);
+
+    // Ensure the directory exists
+    const dbDir = dirname(dbPath);
+    if (!existsSync(dbDir)) {
+      mkdirSync(dbDir);
+    }
+
+    this.db = new Database(dbPath, { fileMustExist: false });
     this.initializeDatabase();
 
     this.setupToolHandlers();

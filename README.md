@@ -5,6 +5,8 @@ https://cline.bot/blog/supercharge-cline-3-ways-to-build-better-with-perplexity-
 
 Your own research assistant inside of Cline! Utilizes Perplexity's new Sonar Pro API to get docs, create up-to-date api routes, and check deprecated code while you create features with Cline. 
 
+Includes Chain of Thought Reasoning and local chat history through SQLite thanks to Lix for the idea :)
+
 <a href="https://glama.ai/mcp/servers/g1i6ilg8sl"><img width="380" height="200" src="https://glama.ai/mcp/servers/g1i6ilg8sl/badge" alt="MCP-researcher Server MCP server" /></a>
 
 ## Tools
@@ -23,6 +25,8 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
 
 
 ## Installation
+
+### paste this part into claude directly if you want to, the ai can install it for you
 
 1. First install Node.js if not already installed (from nodejs.org)
 
