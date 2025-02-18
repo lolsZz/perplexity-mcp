@@ -1,70 +1,60 @@
-We got an article about perpelxity mcp! 
-https://cline.bot/blog/supercharge-cline-3-ways-to-build-better-with-perplexity-mcp
-
 # MCP-researcher Server
 
-Your own research assistant inside of Cline! Utilizes Perplexity's new Sonar Pro API to get docs, create up-to-date api routes, and check deprecated code while you create features with Cline. 
-
-Includes Chain of Thought Reasoning and local chat history through SQLite thanks to Lix for the idea :)
+Your own research assistant inside of Claude! Utilizes Perplexity's Sonar Pro API to get documentation, create up-to-date API routes, and check deprecated code. Includes Chain of Thought Reasoning and local chat history through SQLite.
 
 <a href="https://glama.ai/mcp/servers/g1i6ilg8sl"><img width="380" height="200" src="https://glama.ai/mcp/servers/g1i6ilg8sl/badge" alt="MCP-researcher Server MCP server" /></a>
 
-## Tools
+## Features
 
-### 1. [Search](https://github.com/DaInfernalCoder/researcher-mcp/blob/main/examples/search.md)
-Performs general search queries to get comprehensive information on any topic. The example shows how to use different detail levels (brief, normal, detailed) to get tailored responses.
+### 1. Search
+Performs general search queries to get comprehensive information on any topic. Supports different detail levels (brief, normal, detailed) to get tailored responses.
 
-### 2. [Get Documentation](https://github.com/DaInfernalCoder/researcher-mcp/blob/main/examples/find-apis.md)
-Retrieves documentation and usage examples for specific technologies, libraries, or APIs. The example demonstrates getting comprehensive documentation for React hooks, including best practices and common pitfalls.
+### 2. Get Documentation
+Retrieves documentation and usage examples for specific technologies, libraries, or APIs. Get comprehensive documentation including best practices and common pitfalls.
 
-### 3. [Find APIs](https://github.com/DaInfernalCoder/researcher-mcp/blob/main/examples/find-apis.md)
-Discovers and evaluates APIs that could be integrated into a project. The example shows finding payment processing APIs with detailed analysis of features, pricing, and integration complexity.
+### 3. Find APIs
+Discovers and evaluates APIs that could be integrated into a project. Get detailed analysis of features, pricing, and integration complexity.
 
-### 4. [Check Deprecated Code](https://github.com/DaInfernalCoder/researcher-mcp/blob/main/examples/check-deprecated-code.md)
-Analyzes code for deprecated features or patterns, providing migration guidance. The example demonstrates checking React class components and lifecycle methods for modern alternatives.
-
+### 4. Check Deprecated Code
+Analyzes code for deprecated features or patterns, providing migration guidance. Helps modernize code by suggesting current best practices.
 
 ## Installation
 
-### paste this part into claude directly if you want to, the ai can install it for you
+1. **Prerequisites**:
+   - Node.js (install from [nodejs.org](https://nodejs.org))
+   - A Perplexity API key from [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
 
-1. First install Node.js if not already installed (from nodejs.org)
+2. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/pashpashpash/perplexity-mcp.git
+   cd perplexity-mcp
+   ```
 
-2. Clone the repo
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-- git clone https://github.com/DaInfernalCoder/researcher-mcp perplexity-server 
+4. **Build the Project**:
+   ```bash
+   npm run build
+   ```
 
-- cd perplexity-server
+5. **Configure Claude Desktop**:
 
-3. Install dependencies and build:
-npm install
-
-4. Get a Perplexity API key from [https://www.perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
-
-5. Create the MCP settings file in the appropriate location for your OS:
-macOS: ~/Library/Application Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
-Windows: %APPDATA%\Cursor\User\globalStorage\saoudrizwan.claude-dev\settings\cline_mcp_settings.json
-Linux: ~/.config/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
-
-5. To use with Claude Desktop, add the server config:
-
-On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
-
-6. To use with Cline, add into mcpServers: 
+Add the following to your claude_desktop_config.json:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "perplexity-server": {
       "command": "node",
-      "args": [
-        "[path/to/researcher-mcp/index.js]"
-      ],
+      "args": ["path/to/perplexity-mcp/dist/index.js"],
       "env": {
-        "PERPLEXITY_API_KEY": ""
+        "PERPLEXITY_API_KEY": "your-api-key-here"
       },
-      "disabled": false,
       "autoApprove": [
         "search",
         "get_documentation",
@@ -75,12 +65,74 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
   }
 }
 ```
+Note: Replace "path/to/perplexity-mcp" with the actual path to your cloned repository.
 
-7. Build the server: 
+## Example Usage
+
+### Search
+```json
+{
+  "query": "What are the best practices for React hooks?",
+  "detail_level": "detailed"
+}
+```
+
+### Get Documentation
+```json
+{
+  "technology": "React",
+  "topic": "useEffect hook",
+  "include_examples": true
+}
+```
+
+### Find APIs
+```json
+{
+  "category": "payment processing",
+  "requirements": ["recurring billing", "international support"]
+}
+```
+
+### Check Deprecated Code
+```json
+{
+  "code": "class MyComponent extends React.Component {...}",
+  "framework": "React",
+  "version": "18"
+}
+```
+
+## Debugging
+
+If you run into issues, check Claude Desktop's MCP logs:
+```bash
+tail -n 20 -f ~/Library/Logs/Claude/mcp*.log
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build the project
 npm run build
 
-Make sure to:
-- Replace /absolute/path/to with the actual path where you cloned the repository
-- Replace your-api-key-here with your Perplexity API key
-- Keep the same autoApprove settings for consistent behavior
+# Development with auto-rebuild
+npm run watch
+```
 
+## Documentation
+
+For detailed examples and usage guides, see:
+- [Search Examples](https://github.com/DaInfernalCoder/perplexity-mcp/blob/main/examples/search.md)
+- [API Documentation Examples](https://github.com/DaInfernalCoder/perplexity-mcp/blob/main/examples/find-apis.md)
+- [Deprecated Code Examples](https://github.com/DaInfernalCoder/perplexity-mcp/blob/main/examples/check-deprecated-code.md)
+
+## License
+
+MIT
+
+---
+Note: This is a fork of the [original perplexity-mcp repository](https://github.com/DaInfernalCoder/perplexity-mcp).
