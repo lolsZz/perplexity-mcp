@@ -18,11 +18,26 @@ Discovers and evaluates APIs that could be integrated into a project. Get detail
 ### 4. Check Deprecated Code
 Analyzes code for deprecated features or patterns, providing migration guidance. Helps modernize code by suggesting current best practices.
 
+## Prerequisites
+
+1. **System Requirements**:
+   - Node.js (install from [nodejs.org](https://nodejs.org))
+   - Python with distutils (required for some npm dependencies)
+     ```bash
+     # On macOS with Homebrew:
+     brew install python-setuptools
+     ```
+
+2. **API Key**:
+   - Get your Perplexity API key from [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
+
 ## Installation
 
-1. **Prerequisites**:
-   - Node.js (install from [nodejs.org](https://nodejs.org))
-   - A Perplexity API key from [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
+1. **Create Project Directory**:
+   ```bash
+   mkdir -p ~/Documents/Claude/MCP
+   cd ~/Documents/Claude/MCP
+   ```
 
 2. **Clone the Repository**:
    ```bash
@@ -34,15 +49,19 @@ Analyzes code for deprecated features or patterns, providing migration guidance.
    ```bash
    npm install
    ```
+   Note: If you see Python distutils errors, make sure you've installed python-setuptools as mentioned in prerequisites.
 
 4. **Build the Project**:
    ```bash
    npm run build
    ```
+   This will create the build directory with the compiled server code.
 
-5. **Configure Claude Desktop**:
+## Configuration
 
-Add the following to your claude_desktop_config.json:
+1. **Configure Claude Desktop**:
+
+Add this to your claude_desktop_config.json:
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
@@ -51,7 +70,7 @@ Add the following to your claude_desktop_config.json:
   "mcpServers": {
     "perplexity-server": {
       "command": "node",
-      "args": ["path/to/perplexity-mcp/dist/index.js"],
+      "args": ["path/to/perplexity-mcp/build/index.js"],
       "env": {
         "PERPLEXITY_API_KEY": "your-api-key-here"
       },
@@ -65,7 +84,21 @@ Add the following to your claude_desktop_config.json:
   }
 }
 ```
-Note: Replace "path/to/perplexity-mcp" with the actual path to your cloned repository.
+Note: 
+- Replace "path/to/perplexity-mcp" with the absolute path to your cloned repository
+- Replace "your-api-key-here" with your Perplexity API key
+- Make sure to use "/build/index.js" (not "/dist/index.js")
+
+## Starting the Server
+
+1. **Manual Start**:
+   ```bash
+   cd path/to/perplexity-mcp
+   PERPLEXITY_API_KEY="your-api-key-here" node build/index.js
+   ```
+
+2. **Verify Server**:
+   The server should start without any errors. Keep this terminal window open while using the server.
 
 ## Example Usage
 
@@ -103,12 +136,27 @@ Note: Replace "path/to/perplexity-mcp" with the actual path to your cloned repos
 }
 ```
 
-## Debugging
+## Troubleshooting
 
-If you run into issues, check Claude Desktop's MCP logs:
-```bash
-tail -n 20 -f ~/Library/Logs/Claude/mcp*.log
-```
+1. **Build Directory Issues**:
+   - Make sure you're using the correct path in Claude Desktop config
+   - Verify the build directory exists after running `npm run build`
+   - Check that the path is using `/build/index.js`, not `/dist/index.js`
+
+2. **Server Connection Issues**:
+   - Ensure the server is running in a separate terminal
+   - Verify the API key is properly set in the environment
+   - Check Claude Desktop's MCP logs:
+     ```bash
+     tail -n 20 -f ~/Library/Logs/Claude/mcp*.log
+     ```
+
+3. **Python Dependencies**:
+   - If you see Python distutils errors during npm install:
+     ```bash
+     brew install python-setuptools
+     ```
+   - Then retry `npm install`
 
 ## Development
 
@@ -121,6 +169,9 @@ npm run build
 
 # Development with auto-rebuild
 npm run watch
+
+# Start server with debug output
+DEBUG=* node build/index.js
 ```
 
 ## Documentation
